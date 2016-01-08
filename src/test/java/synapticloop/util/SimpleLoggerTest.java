@@ -43,6 +43,9 @@ public class SimpleLoggerTest {
 		SimpleLogger two = SimpleLogger.getLogger("two");
 		SimpleLogger three = SimpleLogger.getLogger("three");
 
+		SimpleLogger.setShouldLogError(true);
+		SimpleLogger.setShouldLogFatal(true);
+
 		one.info("hello");
 		assertLogContains(outputStream.getAndResetOutput(), "INFO", "one", "hello");
 

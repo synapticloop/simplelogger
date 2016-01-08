@@ -1,12 +1,17 @@
 package synapticloop.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class SimpleLogger {
 	// The log level output strings
@@ -15,6 +20,8 @@ public class SimpleLogger {
 	private static final String WARN = "WARN";
 	private static final String ERROR = "ERROR";
 	private static final String FATAL = "FATAL";
+
+	private static final String SIMPLE_LOGGER_DOT_PROPERTIES = "/simplelogger.properties";
 
 	// the date format
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -41,6 +48,9 @@ public class SimpleLogger {
 
 	// the output stream to use - defaults to System.out
 	private static OutputStream outputStream = System.out;
+
+	// whether the SimpleLogger is initialised
+	private static boolean isInitialised = false;
 
 	// the name of this component
 	private String component = null;
@@ -90,6 +100,73 @@ public class SimpleLogger {
 			MAX_CHARS = length;
 			LOG_FORMAT = LOG_FORMAT_BASE.replaceAll("MAX_CHARS", Integer.toString(MAX_CHARS));
 			LOG_FORMAT_EXCEPTION = LOG_FORMAT_EXCEPTION_BASE.replaceAll("MAX_CHARS", Integer.toString(MAX_CHARS));
+		}
+
+		if(isInitialised) {
+			return;
+		} else {
+			isInitialised = true;
+			// try and load the simplelogger.properties file from the file-system first
+
+			Properties properties = new Properties();
+			try {
+				File file = new File("." + SIMPLE_LOGGER_DOT_PROPERTIES);
+				if(file.exists() && file.canRead()) {
+					outputStream.write(("[  INIT ] Found '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n").getBytes());
+					properties.load(new FileInputStream(file));
+					parseProperties(properties);
+					return;
+				} else {
+					outputStream.write(("[  INIT ] Could not find '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n").getBytes());
+				}
+			} catch(IOException ex) {
+				// ignore
+				try {
+					outputStream.write(("[  INIT ] Could not find '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n").getBytes());
+				} catch (IOException ex1) {
+				}
+				return;
+			}
+
+			// at this point try and load them from the classpath
+			try {
+				InputStream inputStream = SimpleLogger.class.getResourceAsStream(SIMPLE_LOGGER_DOT_PROPERTIES);
+				if(null != inputStream) {
+					outputStream.write(("[  INIT ] Found '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n").getBytes());
+					properties.load(inputStream);
+					parseProperties(properties);
+				} else {
+					outputStream.write(("[  INIT ] Could not find '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n").getBytes());
+				}
+			} catch (IOException ex) {
+				try {
+					outputStream.write(("[  INIT ] Could not read '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n").getBytes());
+				} catch (IOException ex1) {
+				}
+				return;
+			}
+		}
+	}
+
+	/**
+	 * parse the properties file for the log level settings
+	 * @param properties
+	 */
+	private static void parseProperties(Properties properties) {
+		// go through the properties and add them to the log levels lookup
+		Enumeration<Object> keys = properties.keys();
+		while (keys.hasMoreElements()) {
+			String key = ((String) keys.nextElement());
+			Boolean value = Boolean.valueOf(properties.getProperty(key));
+
+			key = key.toUpperCase();
+
+			try {
+				outputStream.write(("[  INIT ] Setting logging level '" + key + "' to '" + value + "'.\n").getBytes());
+			} catch (IOException ex) {
+			}
+
+			logLevels.put(key, value);
 		}
 	}
 
