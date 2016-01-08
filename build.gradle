@@ -45,7 +45,7 @@ configurations.all {
  */
 
 
-def javaApiUrl = 'http://docs.oracle.com/javase/1.7.0/docs/api/'
+def javaApiUrl = 'http://docs.oracle.com/javase/1.6.0/docs/api/'
 def groovyApiUrl = 'http://groovy.codehaus.org/gapi/'
 
 tasks.withType(Javadoc) {
