@@ -10,7 +10,7 @@ group = 'synapticloop'
 archivesBaseName = 'simplelogger'
 description = """a very simple logger"""
 
-version = 'v1.0.0'
+version = 'v1.0.1'
 
 description = """simplelogger"""
 
