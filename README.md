@@ -50,7 +50,7 @@ And now for the dependency
     <dependency>
       <groupId>synapticloop</groupId>
       <artifactId>simplelogger</artifactId>
-      <version>v1.0.0</version>
+      <version>v1.0.2</version>
       <type>jar</type>
     </dependency>
  
@@ -73,15 +73,15 @@ Repository
 
 and then include the dependency:
 
-    runtime(group: 'synapticloop', name: 'simplelogger', version: 'v1.0.0', ext: 'jar')
+    runtime(group: 'synapticloop', name: 'simplelogger', version: 'v1.0.2', ext: 'jar')
 
-    compile(group: 'synapticloop', name: 'simplelogger', version: 'v1.0.0', ext: 'jar')
+    compile(group: 'synapticloop', name: 'simplelogger', version: 'v1.0.2', ext: 'jar')
  
 or 
 
-    runtime 'synapticloop:simplelogger:v1.0.0'
+    runtime 'synapticloop:simplelogger:v1.0.2'
 
-    compile 'synapticloop:simplelogger:v1.0.0'
+    compile 'synapticloop:simplelogger:v1.0.2'
     
 ## Other
 
