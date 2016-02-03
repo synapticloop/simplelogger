@@ -9,15 +9,13 @@ import org.junit.Test;
 
 
 public class SimpleLoggerTest {
-	private SimpleLogger simpleLogger = null;
 
 	public class TestOutputStream extends OutputStream {
 		StringBuilder stringBuilder = new StringBuilder();
 
 		@Override
 		public void write(int b) throws IOException {
-			// TODO Auto-generated method stub
-			System.out.println("writing");
+			stringBuilder.append(b);
 		}
 
 		@Override

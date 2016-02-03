@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -112,40 +113,49 @@ public class SimpleLogger {
 			try {
 				File file = new File("." + SIMPLE_LOGGER_DOT_PROPERTIES);
 				if(file.exists() && file.canRead()) {
-					outputStream.write(("[  INIT ] Found '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n").getBytes());
+					logInit("Found '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n");
 					properties.load(new FileInputStream(file));
 					parseProperties(properties);
 					return;
 				} else {
-					outputStream.write(("[  INIT ] Could not find '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n").getBytes());
+					logInit("Could not find '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n");
 				}
 			} catch(IOException ex) {
 				// ignore
-				try {
-					outputStream.write(("[  INIT ] Could not find '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n").getBytes());
-				} catch (IOException ex1) {
-				}
-				return;
+				logInit("Could not find/read/parse '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n");
 			}
 
 			// at this point try and load them from the classpath
 			try {
 				InputStream inputStream = SimpleLogger.class.getResourceAsStream(SIMPLE_LOGGER_DOT_PROPERTIES);
 				if(null != inputStream) {
-					outputStream.write(("[  INIT ] Found '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n").getBytes());
+					logInit("Found '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n");
 					properties.load(inputStream);
 					parseProperties(properties);
 				} else {
-					outputStream.write(("[  INIT ] Could not find '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n").getBytes());
+					logInit("Could not find '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n");
 				}
 			} catch (IOException ex) {
-				try {
-					outputStream.write(("[  INIT ] Could not read '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n").getBytes());
-				} catch (IOException ex1) {
-				}
-				return;
+				logInit("Could not find/read/parse '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n");
 			}
+
+			logInit("Property file checking completed... using default levels...\n");
+			printLogLevels();
 		}
+	}
+
+	/**
+	 * Log an init message
+	 * 
+	 * @param message the message to log
+	 */
+	private static void logInit(String message) {
+		try {
+			String currentDateTime = SIMPLE_DATE_FORMAT.format(new Date(System.currentTimeMillis()));
+			outputStream.write((currentDateTime + " [  INIT ] " + message).getBytes());
+		} catch (IOException ex) {
+		}
+
 	}
 
 	/**
@@ -153,6 +163,8 @@ public class SimpleLogger {
 	 * @param properties
 	 */
 	private static void parseProperties(Properties properties) {
+		logInit("Initialising properties...\n");
+
 		// go through the properties and add them to the log levels lookup
 		Enumeration<Object> keys = properties.keys();
 		while (keys.hasMoreElements()) {
@@ -161,12 +173,19 @@ public class SimpleLogger {
 
 			key = key.toUpperCase();
 
-			try {
-				outputStream.write(("[  INIT ] Setting logging level '" + key + "' to '" + value + "'.\n").getBytes());
-			} catch (IOException ex) {
-			}
+			
 
 			logLevels.put(key, value);
+		}
+
+		printLogLevels();
+	}
+
+	private static void printLogLevels() {
+		Iterator<String> iterator = logLevels.keySet().iterator();
+		while (iterator.hasNext()) {
+			String key = (String) iterator.next();
+			logInit("Setting logging level '" + key + "' to '" + logLevels.get(key) + "'.\n");
 		}
 	}
 
