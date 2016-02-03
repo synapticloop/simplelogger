@@ -1,4 +1,4 @@
-<img src="https://travis-ci.org/synapticloop/simplelogger.svg?branch=master" />
+[![Build Status](https://travis-ci.org/synapticloop/simplelogger.svg?branch=master)](https://travis-ci.org/synapticloop/simplelogger)
 
 A small (~3k) Simple Logger
 
