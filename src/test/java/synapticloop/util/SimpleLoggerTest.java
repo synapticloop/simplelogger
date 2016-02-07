@@ -33,7 +33,16 @@ public class SimpleLoggerTest {
 	};
 
 	@Test
-	public void testMethodName() {
+	public void testGetLoggerSimpleName() {
+		SimpleLogger simpleLogger = SimpleLogger.getLoggerSimpleName(SimpleLogger.class);
+		assertEquals("SIMPLE_LOGGER", simpleLogger.getComponent());
+
+		simpleLogger = SimpleLogger.getLoggerSimpleName(String.class);
+		assertEquals("STRING", simpleLogger.getComponent());
+	}
+
+	@Test
+	public void testOutputStream() {
 		TestOutputStream outputStream = new TestOutputStream();
 		SimpleLogger.setOutputStream(outputStream);
 

@@ -91,6 +91,40 @@ public class SimpleLogger {
 	}
 
 	/**
+	 * Get a logger with the defined component name, which will translate the 
+	 * simple class name to uppercase separated by an underscore.  For example
+	 * SimpleLogger would be translated to SIMPLE_LOGGER.
+	 * 
+	 * @param clazz The class from which the component name will be derived
+	 * 
+	 * @return The simple logger instance
+	 */
+	public static SimpleLogger getLoggerSimpleName(Class<?> clazz) {
+		String simpleName = clazz.getSimpleName();
+
+		boolean hasPrevious = false;
+
+		char[] bytes = simpleName.toCharArray();
+		StringBuilder stringBuilder = new StringBuilder();
+
+		for (char c : bytes) {
+			String byteString = Character.toString(c);
+			if(byteString == byteString.toUpperCase()) {
+				if(hasPrevious) {
+					stringBuilder.append("_");
+				} else {
+					hasPrevious = true;
+				}
+			}
+			stringBuilder.append(byteString.toUpperCase());
+		}
+
+		String component = stringBuilder.toString();
+		initialise(component);
+		return(new SimpleLogger(component));
+	}
+
+	/**
 	 * initialise the Simple Logger which updates the logging format
 	 * 
 	 * @param component the name of the additional component
@@ -173,7 +207,7 @@ public class SimpleLogger {
 
 			key = key.toUpperCase();
 
-			
+
 
 			logLevels.put(key, value);
 		}
@@ -332,4 +366,5 @@ public class SimpleLogger {
 	 */
 	public static void setShouldLogFatal(boolean shouldLog) { logLevels.put(FATAL, shouldLog); }
 
+	public String getComponent() { return(this.component); }
 }

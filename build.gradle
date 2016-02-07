@@ -4,13 +4,14 @@ plugins {
 	id "maven"
 	id "maven-publish"
 	id "com.jfrog.bintray" version "1.4"
+	id 'co.riiid.gradle' version '0.3.1'
 }
 
 group = 'synapticloop'
 archivesBaseName = 'simplelogger'
 description = """a very simple logger"""
 
-version = 'v1.0.4'
+version = 'v1.0.5'
 
 description = """simplelogger"""
 
@@ -97,5 +98,16 @@ bintray {
 		name = 'simplelogger'
 	}
 
+}
+
+github {
+	owner = group
+	repo = archivesBaseName
+	token = System.getenv('GITHUB_TOKEN')
+	tagName = version
+	name = version
+	assets = [
+		'build/libs/' + archivesBaseName + '-' + version + '-all.jar'
+	]
 }
 
