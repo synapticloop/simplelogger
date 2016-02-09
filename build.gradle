@@ -21,7 +21,7 @@ group = 'synapticloop'
 archivesBaseName = 'simplelogger'
 description = """a simple, light-weight logging framework"""
 
-version = 'v1.0.6'
+version = 'v1.0.7'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
