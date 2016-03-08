@@ -1,4 +1,4 @@
-package synapticloop.util;
+package synapticloop.util.simplelogger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,40 +14,31 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import synapticloop.util.simplelogger.Logger;
-
-/**
- * 
- * @author synapticloop
- * 
- * @deprecated {@link Logger} instead
- */
-@Deprecated
-public class SimpleLogger {
+public class Logger {
 	// The log level output strings
-	private static final String DEBUG = "DEBUG";
-	private static final String INFO = "INFO";
-	private static final String WARN = "WARN";
-	private static final String ERROR = "ERROR";
-	private static final String FATAL = "FATAL";
+	protected static final String DEBUG = "DEBUG";
+	protected static final String INFO = "INFO";
+	protected static final String WARN = "WARN";
+	protected static final String ERROR = "ERROR";
+	protected static final String FATAL = "FATAL";
 
-	private static final String SIMPLE_LOGGER_DOT_PROPERTIES = "/simplelogger.properties";
+	protected static final String SIMPLE_LOGGER_DOT_PROPERTIES = "/simplelogger.properties";
 
 	// the date format
-	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	protected static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	// the number of characters to pad
-	private static int MAX_CHARS = 0;
+	protected static int MAX_CHARS = 0;
 
 	// the logging format - this updates the format on every addition to the logger
-	private static final String LOG_FORMAT_BASE = "%s [ %5s ] [ %MAX_CHARSs ] %s\n";
-	private static final String LOG_FORMAT_EXCEPTION_BASE = "%s [ %5s ] [ %MAX_CHARSs ] %s, exception was: %s\n";
+	protected static final String LOG_FORMAT_BASE = "%s [ %5s ] [ %MAX_CHARSs ] %s\n";
+	protected static final String LOG_FORMAT_EXCEPTION_BASE = "%s [ %5s ] [ %MAX_CHARSs ] %s, exception was: %s\n";
 
-	private static String LOG_FORMAT = "%s [ %5s ] [ %0s ] %s\n";;
-	private static String LOG_FORMAT_EXCEPTION = "%s [ %5s ] [ %0s ] %s, exception was: %s\n";
+	protected static String LOG_FORMAT = "%s [ %5s ] [ %0s ] %s\n";;
+	protected static String LOG_FORMAT_EXCEPTION = "%s [ %5s ] [ %0s ] %s, exception was: %s\n";
 
 	// whether to log specific levels lookup
-	private static Map<String, Boolean> logLevels = new HashMap<String, Boolean>();
+	protected static Map<String, Boolean> logLevels = new HashMap<String, Boolean>();
 	static {
 		logLevels.put(DEBUG, true);
 		logLevels.put(INFO, true);
@@ -57,20 +48,20 @@ public class SimpleLogger {
 	}
 
 	// the output stream to use - defaults to System.out
-	private static OutputStream outputStream = System.out;
+	protected static OutputStream outputStream = System.out;
 
 	// whether the SimpleLogger is initialised
-	private static boolean isInitialised = false;
+	protected static boolean isInitialised = false;
 
 	// the name of this component
-	private String component = null;
+	protected String component = null;
 
 	/**
 	 * Create a new Simple Logger
 	 * 
 	 * @param component the component name to log for
 	 */
-	private SimpleLogger(String component) {
+	protected Logger(String component) {
 		this.component = component;
 	}
 
@@ -81,9 +72,9 @@ public class SimpleLogger {
 	 * 
 	 * @return The SimpleLogger instance for this named component
 	 */
-	public static SimpleLogger getLogger(String component) {
+	public static Logger getLogger(String component) {
 		initialise(component);
-		return(new SimpleLogger(component));
+		return(new Logger(component));
 	}
 
 	/**
@@ -93,10 +84,10 @@ public class SimpleLogger {
 	 * 
 	 * @return The simple logger instance
 	 */
-	public static SimpleLogger getLogger(Class<?> clazz) {
+	public static Logger getLogger(Class<?> clazz) {
 		String component = clazz.getCanonicalName();
 		initialise(component);
-		return(new SimpleLogger(component));
+		return(new Logger(component));
 	}
 
 	/**
@@ -108,7 +99,7 @@ public class SimpleLogger {
 	 * 
 	 * @return The simple logger instance
 	 */
-	public static SimpleLogger getLoggerSimpleName(Class<?> clazz) {
+	public static Logger getLoggerSimpleName(Class<?> clazz) {
 		String simpleName = clazz.getSimpleName();
 
 		boolean hasPrevious = false;
@@ -130,7 +121,7 @@ public class SimpleLogger {
 
 		String component = stringBuilder.toString();
 		initialise(component);
-		return(new SimpleLogger(component));
+		return(new Logger(component));
 	}
 
 	/**
@@ -138,7 +129,7 @@ public class SimpleLogger {
 	 * 
 	 * @param component the name of the additional component
 	 */
-	private static synchronized void initialise(String component) {
+	protected static synchronized void initialise(String component) {
 		int length = component.length();
 		if(length > MAX_CHARS) {
 			MAX_CHARS = length;
@@ -170,7 +161,7 @@ public class SimpleLogger {
 
 			// at this point try and load them from the classpath
 			try {
-				InputStream inputStream = SimpleLogger.class.getResourceAsStream(SIMPLE_LOGGER_DOT_PROPERTIES);
+				InputStream inputStream = Logger.class.getResourceAsStream(SIMPLE_LOGGER_DOT_PROPERTIES);
 				if(null != inputStream) {
 					logInit("Found '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n");
 					properties.load(inputStream);
@@ -192,7 +183,7 @@ public class SimpleLogger {
 	 * 
 	 * @param message the message to log
 	 */
-	private static void logInit(String message) {
+	protected static void logInit(String message) {
 		try {
 			String currentDateTime = SIMPLE_DATE_FORMAT.format(new Date(System.currentTimeMillis()));
 			outputStream.write((currentDateTime + " [  INIT ] " + message).getBytes());
@@ -203,9 +194,10 @@ public class SimpleLogger {
 
 	/**
 	 * parse the properties file for the log level settings
-	 * @param properties
+	 * 
+	 * @param properties the properties file to parse
 	 */
-	private static void parseProperties(Properties properties) {
+	protected static void parseProperties(Properties properties) {
 		logInit("Initialising properties...\n");
 
 		// go through the properties and add them to the log levels lookup
@@ -224,7 +216,7 @@ public class SimpleLogger {
 		printLogLevels();
 	}
 
-	private static void printLogLevels() {
+	protected static void printLogLevels() {
 		Iterator<String> iterator = logLevels.keySet().iterator();
 		while (iterator.hasNext()) {
 			String key = (String) iterator.next();
@@ -314,7 +306,7 @@ public class SimpleLogger {
 	 * @param message the message to log
 	 * @param throwable the throwable, if null, the error will nto include the throwable.getMessage()
 	 */
-	private void log(String level, String message, Throwable throwable) {
+	protected void log(String level, String message, Throwable throwable) {
 		if(!logLevels.get(level)) {
 			return;
 		}
@@ -338,7 +330,7 @@ public class SimpleLogger {
 	 * 
 	 * @param outputStream The output stream to log to
 	 */
-	public static void setOutputStream(OutputStream outputStream) { SimpleLogger.outputStream = outputStream; }
+	public static void setOutputStream(OutputStream outputStream) { Logger.outputStream = outputStream; }
 
 	/**
 	 * Set <strong>globally</strong> whether to log debug messages
@@ -375,5 +367,10 @@ public class SimpleLogger {
 	 */
 	public static void setShouldLogFatal(boolean shouldLog) { logLevels.put(FATAL, shouldLog); }
 
+	/**
+	 * Get this name of this component
+	 * 
+	 * @return the name of this component
+	 */
 	public String getComponent() { return(this.component); }
 }
