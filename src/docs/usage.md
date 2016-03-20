@@ -1,4 +1,7 @@
-A small (~3k) Simple Logger
+
+A small (~9k) Simple Logger - one class,, no dependencies 
+
+For when you really only need the simplest of loggers.
 
 # Usage
 

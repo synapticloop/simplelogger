@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/synapticloop/simplelogger.svg?branch=master)](https://travis-ci.org/synapticloop/simplelogger) [![Download](https://api.bintray.com/packages/synapticloop/maven/simplelogger/images/download.svg)](https://bintray.com/synapticloop/maven/simplelogger/_latestVersion) [![GitHub Release](https://img.shields.io/github/release/synapticloop/simplelogger.svg)](https://github.com/synapticloop/simplelogger/releases) 
 
 # simplelogger
 
@@ -6,7 +7,10 @@
 > a simple, light-weight logging framework
 
 
-A small (~3k) Simple Logger
+
+A small (~9k) Simple Logger - one class,, no dependencies 
+
+For when you really only need the simplest of loggers.
 
 # Usage
 
@@ -36,7 +40,7 @@ LOGGER.fatal("message", exception);
 
 ## Configuration
 
-You may set logging levels globally, either through the static methods, or by including a `simplelogger.properties` file
+You may set logging levels globally, either through the static methods, or by including a `simplelogger.properties` file at the root of the classpath
 
 ### Static methods
 
