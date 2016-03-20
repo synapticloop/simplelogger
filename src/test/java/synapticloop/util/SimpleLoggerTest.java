@@ -7,6 +7,8 @@ import java.io.OutputStream;
 
 import org.junit.Test;
 
+import synapticloop.util.simplelogger.Logger;
+
 
 public class SimpleLoggerTest {
 
@@ -34,24 +36,24 @@ public class SimpleLoggerTest {
 
 	@Test
 	public void testGetLoggerSimpleName() {
-		SimpleLogger simpleLogger = SimpleLogger.getLoggerSimpleName(SimpleLogger.class);
-		assertEquals("SIMPLE_LOGGER", simpleLogger.getComponent());
+		Logger logger = Logger.getLoggerSimpleName(Logger.class);
+		assertEquals("LOGGER", logger.getComponent());
 
-		simpleLogger = SimpleLogger.getLoggerSimpleName(String.class);
-		assertEquals("STRING", simpleLogger.getComponent());
+		logger = Logger.getLoggerSimpleName(String.class);
+		assertEquals("STRING", logger.getComponent());
 	}
 
 	@Test
 	public void testOutputStream() {
 		TestOutputStream outputStream = new TestOutputStream();
-		SimpleLogger.setOutputStream(outputStream);
+		Logger.setOutputStream(outputStream);
 
-		SimpleLogger one = SimpleLogger.getLogger("one");
-		SimpleLogger two = SimpleLogger.getLogger("two");
-		SimpleLogger three = SimpleLogger.getLogger("three");
+		Logger one = Logger.getLogger("one");
+		Logger two = Logger.getLogger("two");
+		Logger three = Logger.getLogger("three");
 
-		SimpleLogger.setShouldLogError(true);
-		SimpleLogger.setShouldLogFatal(true);
+		Logger.setShouldLogError(true);
+		Logger.setShouldLogFatal(true);
 
 		one.info("hello");
 		assertLogContains(outputStream.getAndResetOutput(), "INFO", "one", "hello");
@@ -68,28 +70,28 @@ public class SimpleLoggerTest {
 		two.fatal("hello");
 		assertLogContains(outputStream.getAndResetOutput(), "FATAL", "two", "hello");
 
-		SimpleLogger.setShouldLogDebug(false);
+		Logger.setShouldLogDebug(false);
 		one.debug("hello");
 		assertEquals(outputStream.getAndResetOutput().length(), 0);
 
-		SimpleLogger.setShouldLogInfo(false);
+		Logger.setShouldLogInfo(false);
 		one.info("hello");
 		assertEquals(outputStream.getAndResetOutput().length(), 0);
 
-		SimpleLogger.setShouldLogFatal(false);
+		Logger.setShouldLogFatal(false);
 		one.fatal("hello");
 		assertEquals(outputStream.getAndResetOutput().length(), 0);
 
-		SimpleLogger.setShouldLogWarn(false);
+		Logger.setShouldLogWarn(false);
 		one.warn("hello");
 		assertEquals(outputStream.getAndResetOutput().length(), 0);
 
-		SimpleLogger.setShouldLogError(false);
+		Logger.setShouldLogError(false);
 		one.error("hello");
 		assertEquals(outputStream.getAndResetOutput().length(), 0);
 
-		SimpleLogger.setShouldLogInfo(true);
-		SimpleLogger four = SimpleLogger.getLogger(SimpleLoggerTest.class);
+		Logger.setShouldLogInfo(true);
+		Logger four = Logger.getLogger(SimpleLoggerTest.class);
 		one.info("goodbye");
 		System.out.print(outputStream.getAndResetOutput());
 		four.info("ok");
