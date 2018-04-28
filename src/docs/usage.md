@@ -1,5 +1,5 @@
 
-A small (~9k) Simple Logger - one class,, no dependencies 
+A small (~4.9k) Simple Logger - one class, no dependencies 
 
 For when you really only need the simplest of loggers.
 
@@ -12,7 +12,7 @@ import synapticloop.util.simplelogger.Logger;
 
 ...
 
-private static final Logger LOGGER = Logger.getLogger(SimpleLoggerTest.class);
+private static final Logger LOGGER = Logger.getLogger(LoggerTest.class);
 
 // then you can log information
 LOGGER.debug("message");

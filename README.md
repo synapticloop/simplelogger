@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/synapticloop/simplelogger.svg?branch=master)](https://travis-ci.org/synapticloop/simplelogger) [![Download](https://api.bintray.com/packages/synapticloop/maven/simplelogger/images/download.svg)](https://bintray.com/synapticloop/maven/simplelogger/_latestVersion) [![GitHub Release](https://img.shields.io/github/release/synapticloop/simplelogger.svg)](https://github.com/synapticloop/simplelogger/releases) 
+<a name="documentr_top"></a>[![Build Status](https://travis-ci.org/synapticloop/simplelogger.svg?branch=master)](https://travis-ci.org/synapticloop/simplelogger) [![Download](https://api.bintray.com/packages/synapticloop/maven/simplelogger/images/download.svg)](https://bintray.com/synapticloop/maven/simplelogger/_latestVersion) [![GitHub Release](https://img.shields.io/github/release/synapticloop/simplelogger.svg)](https://github.com/synapticloop/simplelogger/releases) 
 
 # simplelogger
 
@@ -8,7 +8,7 @@
 
 
 
-A small (~9k) Simple Logger - one class,, no dependencies 
+A small (~4.9k) Simple Logger - one class, no dependencies 
 
 For when you really only need the simplest of loggers.
 
@@ -21,7 +21,7 @@ import synapticloop.util.simplelogger.Logger;
 
 ...
 
-private static final Logger LOGGER = Logger.getLogger(SimpleLoggerTest.class);
+private static final Logger LOGGER = Logger.getLogger(LoggerTest.class);
 
 // then you can log information
 LOGGER.debug("message");
@@ -57,6 +57,7 @@ LOGGER.setShouldLogFatal(true);
 
 
 ```
+init=true
 info=true
 debug=true
 warn=true
@@ -76,9 +77,9 @@ Line number report (NumberTextReporter)
 =======================================
   File type    #    Code(      %)    Comment(      %)    Blank(      %)    Total(      %)  
 -----------  ---  ---------------  ------------------  ----------------  ----------------  
-      .java    2     524( 69.40%)        124( 16.42%)      107( 14.17%)      755(100.00%)  
+      .java    1     276( 70.41%)         64( 16.33%)       52( 13.27%)      392(100.00%)  
 -----------  ---  ---------------  ------------------  ----------------  ----------------  
-    1 types    2     524( 69.40%)        124( 16.42%)      107( 14.17%)      755(100.00%)  
+    1 types    1     276( 70.41%)         64( 16.33%)       52( 13.27%)      392(100.00%)  
 ===========  ===  ===============  ==================  ================  ================  
 ```
 
@@ -148,7 +149,7 @@ The `--info` switch will also output logging for the tests
 
 # Artefact Publishing - Github
 
-This project publishes artefacts to [GitHib](https://github.com/)
+This project publishes artefacts to [GitHub](https://github.com/)
 
 > Note that the latest version can be found [https://github.com/synapticloop/simplelogger/releases](https://github.com/synapticloop/simplelogger/releases)
 
@@ -158,7 +159,7 @@ As such, this is not a repository, but a location to download files from.
 
 This project publishes artefacts to [Maven Central](https://search.maven.org/)
 
-> Note that the latest version can be found [mvn central](http://search.maven.org/#artifactdetails|synapticloop|simplelogger|1.1.1|jar)
+> Note that the latest version can be found [mvn central](http://search.maven.org/#artifactdetails|synapticloop|simplelogger|2.0.0|jar)
 
 ## maven setup
 
@@ -178,9 +179,9 @@ repositories {
 
 ```
 dependencies {
-	runtime(group: 'synapticloop', name: 'simplelogger', version: '1.1.1', ext: 'jar')
+	runtime(group: 'synapticloop', name: 'simplelogger', version: '2.0.0', ext: 'jar')
 
-	compile(group: 'synapticloop', name: 'simplelogger', version: '1.1.1', ext: 'jar')
+	compile(group: 'synapticloop', name: 'simplelogger', version: '2.0.0', ext: 'jar')
 }
 ```
 
@@ -188,9 +189,9 @@ or, more simply for versions of gradle greater than 2.1
 
 ```
 dependencies {
-	runtime 'synapticloop:simplelogger:1.1.1'
+	runtime 'synapticloop:simplelogger:2.0.0'
 
-	compile 'synapticloop:simplelogger:1.1.1'
+	compile 'synapticloop:simplelogger:2.0.0'
 }
 ```
 
@@ -200,7 +201,7 @@ dependencies {
 <dependency>
 	<groupId>synapticloop</groupId>
 	<artifactId>simplelogger</artifactId>
-	<version>1.1.1</version>
+	<version>2.0.0</version>
 	<type>jar</type>
 </dependency>
 ```
@@ -214,17 +215,17 @@ You will also need to download the following dependencies:
 
 ### cobertura dependencies
 
-  - net.sourceforge.cobertura:cobertura:2.0.3: (It may be available on one of: [bintray](https://bintray.com/net.sourceforge.cobertura/maven/cobertura/2.0.3/view#files/net.sourceforge.cobertura/cobertura/2.0.3) [mvn central](http://search.maven.org/#artifactdetails|net.sourceforge.cobertura|cobertura|2.0.3|jar))
+  - `net.sourceforge.cobertura:cobertura:2.1.1`: (It may be available on one of: [bintray](https://bintray.com/net.sourceforge.cobertura/maven/cobertura/2.1.1/view#files/net.sourceforge.cobertura/cobertura/2.1.1) [mvn central](http://search.maven.org/#artifactdetails|net.sourceforge.cobertura|cobertura|2.1.1|jar))
 
 
 ### testCompile dependencies
 
-  - junit:junit:4.12: (It may be available on one of: [bintray](https://bintray.com/junit/maven/junit/4.12/view#files/junit/junit/4.12) [mvn central](http://search.maven.org/#artifactdetails|junit|junit|4.12|jar))
+  - `junit:junit:4.12`: (It may be available on one of: [bintray](https://bintray.com/junit/maven/junit/4.12/view#files/junit/junit/4.12) [mvn central](http://search.maven.org/#artifactdetails|junit|junit|4.12|jar))
 
 
 ### testRuntime dependencies
 
-  - junit:junit:4.12: (It may be available on one of: [bintray](https://bintray.com/junit/maven/junit/4.12/view#files/junit/junit/4.12) [mvn central](http://search.maven.org/#artifactdetails|junit|junit|4.12|jar))
+  - `junit:junit:4.12`: (It may be available on one of: [bintray](https://bintray.com/junit/maven/junit/4.12/view#files/junit/junit/4.12) [mvn central](http://search.maven.org/#artifactdetails|junit|junit|4.12|jar))
 
 **NOTE:** You may need to download any dependencies of the above dependencies in turn (i.e. the transitive dependencies)
 
@@ -233,7 +234,7 @@ You will also need to download the following dependencies:
 ```
 The MIT License (MIT)
 
-Copyright (c) 2016 synapticloop
+Copyright (c) 2018 synapticloop
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
