@@ -7,15 +7,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 public class Logger {
 	// The log level output strings
+	protected static final String INIT = "INIT";
 	protected static final String DEBUG = "DEBUG";
 	protected static final String INFO = "INFO";
 	protected static final String WARN = "WARN";
@@ -40,6 +43,7 @@ public class Logger {
 	// whether to log specific levels lookup
 	protected static Map<String, Boolean> logLevels = new HashMap<String, Boolean>();
 	static {
+		logLevels.put(INIT, true);
 		logLevels.put(DEBUG, true);
 		logLevels.put(INFO, true);
 		logLevels.put(WARN, true);
@@ -130,6 +134,8 @@ public class Logger {
 	 * @param component the name of the additional component
 	 */
 	protected static synchronized void initialise(String component) {
+		List<String> initMessages = new ArrayList<String>();
+
 		int length = component.length();
 		if(length > MAX_CHARS) {
 			MAX_CHARS = length;
@@ -143,37 +149,45 @@ public class Logger {
 			isInitialised = true;
 			// try and load the simplelogger.properties file from the file-system first
 
+			boolean foundLevels = false;
 			Properties properties = new Properties();
 			try {
 				File file = new File("." + SIMPLE_LOGGER_DOT_PROPERTIES);
 				if(file.exists() && file.canRead()) {
-					logInit("Found '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n");
+					initMessages.add("Found '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n");
 					properties.load(new FileInputStream(file));
 					parseProperties(properties);
-					return;
+					foundLevels = true;
 				} else {
-					logInit("Could not find '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n");
+					initMessages.add("Could not find '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n");
 				}
 			} catch(IOException ex) {
 				// ignore
-				logInit("Could not find/read/parse '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n");
+				initMessages.add("Could not find/read/parse '." + SIMPLE_LOGGER_DOT_PROPERTIES + "' on the file system.\n");
 			}
 
 			// at this point try and load them from the classpath
-			try {
-				InputStream inputStream = Logger.class.getResourceAsStream(SIMPLE_LOGGER_DOT_PROPERTIES);
-				if(null != inputStream) {
-					logInit("Found '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n");
-					properties.load(inputStream);
-					parseProperties(properties);
-				} else {
-					logInit("Could not find '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n");
+			if(!foundLevels) {
+				try {
+					InputStream inputStream = Logger.class.getResourceAsStream(SIMPLE_LOGGER_DOT_PROPERTIES);
+					if(null != inputStream) {
+						initMessages.add("Found '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n");
+						properties.load(inputStream);
+						parseProperties(properties);
+					} else {
+						initMessages.add("Could not find '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n");
+					}
+				} catch (IOException ex) {
+					initMessages.add("Could not find/read/parse '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n");
 				}
-			} catch (IOException ex) {
-				logInit("Could not find/read/parse '" + SIMPLE_LOGGER_DOT_PROPERTIES + "' in the classpath.\n");
 			}
 
-			logInit("Property file checking completed... using default levels...\n");
+			if(logLevels.get(INIT)) {
+				for (String initMessage : initMessages) {
+					logInit(initMessage);
+				}
+			}
+
 			printLogLevels();
 		}
 	}
@@ -208,19 +222,21 @@ public class Logger {
 
 			key = key.toUpperCase();
 
-
-
 			logLevels.put(key, value);
 		}
-
-		printLogLevels();
 	}
 
+	/**
+	 * Print out the log levels
+	 */
 	protected static void printLogLevels() {
-		Iterator<String> iterator = logLevels.keySet().iterator();
-		while (iterator.hasNext()) {
-			String key = (String) iterator.next();
-			logInit("Setting logging level '" + key + "' to '" + logLevels.get(key) + "'.\n");
+		Boolean initEnabled = logLevels.get(INIT);
+		if(initEnabled) {
+			Iterator<String> iterator = logLevels.keySet().iterator();
+			while (iterator.hasNext()) {
+				String key = (String) iterator.next();
+				logInit("Setting logging level '" + key + "' to '" + logLevels.get(key) + "'.\n");
+			}
 		}
 	}
 
@@ -304,7 +320,7 @@ public class Logger {
 	 * 
 	 * @param level the level of the message
 	 * @param message the message to log
-	 * @param throwable the throwable, if null, the error will nto include the throwable.getMessage()
+	 * @param throwable the throwable, if null, the error will not include the throwable.getMessage()
 	 */
 	protected void log(String level, String message, Throwable throwable) {
 		if(!logLevels.get(level)) {

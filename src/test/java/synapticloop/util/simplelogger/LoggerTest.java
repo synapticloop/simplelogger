@@ -1,4 +1,4 @@
-package synapticloop.util;
+package synapticloop.util.simplelogger;
 
 import static org.junit.Assert.*;
 
@@ -10,7 +10,7 @@ import org.junit.Test;
 import synapticloop.util.simplelogger.Logger;
 
 
-public class SimpleLoggerTest {
+public class LoggerTest {
 
 	public class TestOutputStream extends OutputStream {
 		StringBuilder stringBuilder = new StringBuilder();
@@ -24,7 +24,7 @@ public class SimpleLoggerTest {
 		public void write(byte[] b) throws IOException {
 			stringBuilder.append(new String(b));
 		}
-		
+
 		public String getAndResetOutput() {
 			try {
 				return(stringBuilder.toString());
@@ -41,6 +41,10 @@ public class SimpleLoggerTest {
 
 		logger = Logger.getLoggerSimpleName(String.class);
 		assertEquals("STRING", logger.getComponent());
+
+		logger = Logger.getLoggerSimpleName(IOException.class);
+		assertEquals("I_O_EXCEPTION", logger.getComponent());
+
 	}
 
 	@Test
@@ -91,12 +95,12 @@ public class SimpleLoggerTest {
 		assertEquals(outputStream.getAndResetOutput().length(), 0);
 
 		Logger.setShouldLogInfo(true);
-		Logger four = Logger.getLogger(SimpleLoggerTest.class);
+		Logger four = Logger.getLogger(LoggerTest.class);
 		one.info("goodbye");
 		System.out.print(outputStream.getAndResetOutput());
 		four.info("ok");
 
-		assertLogContains(outputStream.getAndResetOutput(), "INFO", SimpleLoggerTest.class.getCanonicalName(), "ok");
+		assertLogContains(outputStream.getAndResetOutput(), "INFO", LoggerTest.class.getCanonicalName(), "ok");
 		assertNull(null);
 	}
 
